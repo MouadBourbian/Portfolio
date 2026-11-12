@@ -1,0 +1,41 @@
+---
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+import LanguagePicker from "../components/LanguagePicker.astro";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<ul>
+  <li>
+    <a href={`/${lang}/home/`}>{t("nav.home")}</a>
+  </li>
+  <li>
+    <a href={`/${lang}/about/`}>{t("nav.about")}</a>
+  </li>
+  <li>
+    <a href="https://twitter.com/astrodotbuild">{t("nav.twitter")}</a>
+  </li>
+  <li>
+    <LanguagePicker />
+  </li>
+</ul>
+
+<style>
+  ul {
+    display: flex;
+    list-style: none;
+    gap: 1rem;
+    padding: 0;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+</style>
