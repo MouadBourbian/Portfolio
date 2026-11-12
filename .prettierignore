@@ -1,0 +1,7 @@
+# Deep Directories
+**/dist
+**/node_modules
+**/.astro
+
+# Files
+package-lock.json
