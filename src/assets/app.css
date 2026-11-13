@@ -1,2 +1,10 @@
 @import "tailwindcss";
-@plugin "daisyui";
+@plugin "@tailwindcss/typography";
+@plugin "daisyui" {
+  themes: corporate --default;
+  include:
+    rootcolor, typography, avatar, badge, button, card, dropdown, footer, hero,
+    link, menu, navbar;
+  logs: false;
+}
+@plugin "@iconify/tailwind4";
