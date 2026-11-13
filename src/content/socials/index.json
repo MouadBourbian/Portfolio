@@ -1,0 +1,20 @@
+[
+  {
+    "id": "github",
+    "name": "GitHub",
+    "href": "https://github.com/",
+    "icon": "icon-[simple-icons--github]"
+  },
+  {
+    "id": "linkedin",
+    "name": "LinkedIn",
+    "href": "https://www.linkedin.com/",
+    "icon": "icon-[simple-icons--linkedin]"
+  },
+  {
+    "id": "x",
+    "name": "X",
+    "href": "https://x.com/",
+    "icon": "icon-[simple-icons--x]"
+  }
+]

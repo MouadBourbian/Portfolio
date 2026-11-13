@@ -1,0 +1,72 @@
+[
+  {
+    "id": "astro",
+    "name": "Astro",
+    "icon": "icon-[devicon--astro]"
+  },
+  {
+    "id": "css",
+    "name": "CSS",
+    "icon": "icon-[devicon--css3]"
+  },
+  {
+    "id": "eslint",
+    "name": "ESLint",
+    "icon": "icon-[devicon--eslint]"
+  },
+  {
+    "id": "git",
+    "name": "Git",
+    "icon": "icon-[devicon--git]"
+  },
+  {
+    "id": "html",
+    "name": "HTML",
+    "icon": "icon-[devicon--html5]"
+  },
+  {
+    "id": "javascript",
+    "name": "JavaScript",
+    "icon": "icon-[devicon--javascript]"
+  },
+  {
+    "id": "json",
+    "name": "JSON",
+    "icon": "icon-[devicon--json]"
+  },
+  {
+    "id": "markdown",
+    "name": "Markdown",
+    "icon": "icon-[devicon--markdown]"
+  },
+  {
+    "id": "nodejs",
+    "name": "Node.js",
+    "icon": "icon-[devicon--nodejs]"
+  },
+  {
+    "id": "npm",
+    "name": "npm",
+    "icon": "icon-[devicon--npm-wordmark]"
+  },
+  {
+    "id": "tailwindcss",
+    "name": "Tailwind CSS",
+    "icon": "icon-[devicon--tailwindcss]"
+  },
+  {
+    "id": "typescript",
+    "name": "TypeScript",
+    "icon": "icon-[devicon--typescript]"
+  },
+  {
+    "id": "vite",
+    "name": "Vite",
+    "icon": "icon-[devicon--vitejs]"
+  },
+  {
+    "id": "vscode",
+    "name": "VS Code",
+    "icon": "icon-[devicon--vscode]"
+  }
+]
