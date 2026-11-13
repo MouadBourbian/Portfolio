@@ -1,0 +1,33 @@
+---
+import { getEntry } from "astro:content";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+
+const baseProfile = await getEntry("profile", "index");
+
+if (!baseProfile || !("name" in baseProfile.data)) {
+  throw new Error("Missing or invalid content: profile/index");
+}
+
+const { name } = baseProfile.data;
+
+const t = useTranslations(lang);
+const year = new Date().getUTCFullYear();
+---
+
+<footer class="bg-base-200">
+  <div class="footer mx-auto max-w-6xl px-5 py-8 sm:footer-horizontal sm:justify-between">
+    <aside class="order-2 justify-self-center text-center sm:order-1 sm:justify-self-start sm:text-left">
+      <p>
+        © {year} {name}. {t("footer.allRightsReserved")}.
+      </p>
+    </aside>
+    <nav class="order-1 justify-self-end sm:order-2">
+      <a href="#top" class="link link-hover inline-flex items-center gap-2">
+        {t("footer.backToTop")}
+        <span class="icon-[lucide--arrow-up] h-4 w-4"></span>
+      </a>
+    </nav>
+  </div>
+</footer>
