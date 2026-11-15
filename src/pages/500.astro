@@ -1,0 +1,16 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ErrorState from "../components/ErrorState.astro";
+
+interface Props {
+  error: unknown;
+}
+
+const { error } = Astro.props;
+const devMessage =
+  import.meta.env.DEV && error instanceof Error ? error.message : undefined;
+---
+
+<Layout>
+  <ErrorState code={500} description={devMessage} />
+</Layout>

@@ -1,0 +1,35 @@
+---
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+interface Props {
+  code: 404 | 500;
+  title?: string;
+  description?: string;
+}
+
+const { code, title, description } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const displayTitle = title ?? t(`error.${code}.title`);
+const displayDescription = description ?? t(`error.${code}.description`);
+---
+
+<section class="hero min-h-[calc(100dvh-9rem)] bg-base-100">
+  <div class="hero-content text-center">
+    <div class="max-w-md">
+      <div class="badge badge-outline badge-lg">{code}</div>
+      <h1 class="mt-4 text-5xl font-bold tracking-tight">{displayTitle}</h1>
+      <p class="py-6 text-base leading-relaxed text-base-content/80">
+        {displayDescription}
+      </p>
+      <a href={`/${lang}/`} class="btn btn-primary gap-2">
+        <span
+          class="icon-[lucide--arrow-left] h-5 w-5"
+          aria-hidden="true"
+        ></span>
+        {t("error.backHome")}
+      </a>
+    </div>
+  </div>
+</section>
