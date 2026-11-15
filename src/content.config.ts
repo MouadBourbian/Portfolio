@@ -40,7 +40,7 @@ const socials = defineCollection({
   schema: z.object({
     id: z.string(),
     name: z.string(),
-    href: z.string().url(),
+    href: z.url(),
     icon: z.string(),
   }),
 });

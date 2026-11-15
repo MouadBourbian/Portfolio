@@ -1,8 +1,16 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import ErrorState from "../components/ErrorState.astro";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
-<Layout>
+<Layout
+  title={t("error.404.title")}
+  description={t("error.404.description")}
+  noindex={true}
+>
   <ErrorState code={404} />
 </Layout>

@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import ErrorState from "../components/ErrorState.astro";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
 
 interface Props {
   error: unknown;
@@ -9,8 +10,15 @@ interface Props {
 const { error } = Astro.props;
 const devMessage =
   import.meta.env.DEV && error instanceof Error ? error.message : undefined;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
-<Layout>
+<Layout
+  title={t("error.500.title")}
+  description={t("error.500.description")}
+  noindex={true}
+>
   <ErrorState code={500} description={devMessage} />
 </Layout>

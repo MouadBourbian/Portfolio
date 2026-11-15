@@ -1,17 +1,19 @@
 ---
 import { languages } from "../i18n/ui";
-import { getLangFromUrl } from "../i18n/utils";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
 
 const currentLang = getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
 ---
 
 <button
+  type="button"
   class="btn btn-ghost btn-square"
   popovertarget="language-menu"
   style="anchor-name:--language-menu"
-  aria-label="Select language"
+  aria-label={t("nav.selectLanguage")}
 >
-  <span class="icon-[lucide--globe] h-6 w-6"></span>
+  <span class="icon-[lucide--globe] h-6 w-6" aria-hidden="true"></span>
 </button>
 
 <ul
@@ -24,8 +26,10 @@ const currentLang = getLangFromUrl(Astro.url);
     <li>
       <a
         href={`/${lang}/`}
+        lang={lang}
+        hreflang={lang}
         class:list={{ "menu-active": lang === currentLang }}
-        aria-current={lang === currentLang ? "true" : undefined}
+        aria-current={lang === currentLang ? "page" : undefined}
       >
         {label}
       </a>

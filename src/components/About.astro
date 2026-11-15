@@ -14,10 +14,10 @@ const { Content } = await render(entry);
 
 <section
   aria-labelledby={sectionIds.about}
-  class="prose max-w-none mb-12 sm:mb-16"
+  class="prose mb-12 max-w-none sm:mb-16"
 >
   <h2 id={sectionIds.about}>{t("about.title")}</h2>
-  <div class="text-justify">
+  <div>
     <Content />
   </div>
 </section>
