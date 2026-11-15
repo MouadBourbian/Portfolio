@@ -5,7 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 import postAudit from "@casoon/astro-post-audit";
 
-const { SITE_URL } = loadEnv(
+const { SITE_URL, PUBLIC_DIR } = loadEnv(
   process.env.NODE_ENV ?? "development",
   process.cwd(),
   "",
@@ -13,7 +13,8 @@ const { SITE_URL } = loadEnv(
 
 // https://astro.build/config
 export default defineConfig({
-  site: SITE_URL || "http://localhost:4321",
+  site: SITE_URL?.trim() || "http://localhost:4321",
+  publicDir: PUBLIC_DIR?.trim() || "./public",
   vite: {
     plugins: [tailwindcss()],
   },

@@ -2,15 +2,17 @@ import { defineCollection } from "astro:content";
 import { glob, file } from "astro/loaders";
 import { z } from "astro/zod";
 
+const contentDir = import.meta.env.CONTENT_DIR?.trim() || "./src/content";
+
 const about = defineCollection({
   loader: glob({
-    base: "./src/content/about",
+    base: `${contentDir}/about`,
     pattern: "**/*.md",
   }),
 });
 
 const technologies = defineCollection({
-  loader: file("src/content/technologies/index.json"),
+  loader: file(`${contentDir}/technologies/index.json`),
   schema: z.object({
     id: z.string(),
     name: z.string(),
@@ -20,7 +22,7 @@ const technologies = defineCollection({
 
 const profile = defineCollection({
   loader: glob({
-    base: "./src/content/profile",
+    base: `${contentDir}/profile`,
     pattern: "**/*.json",
   }),
   schema: z.union([
@@ -36,7 +38,7 @@ const profile = defineCollection({
 });
 
 const socials = defineCollection({
-  loader: file("src/content/socials/index.json"),
+  loader: file(`${contentDir}/socials/index.json`),
   schema: z.object({
     id: z.string(),
     name: z.string(),
