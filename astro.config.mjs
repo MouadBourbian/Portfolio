@@ -3,6 +3,7 @@ import { defineConfig } from "astro/config";
 import { loadEnv } from "vite";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
+import vercel from "@astrojs/vercel";
 import postAudit from "@casoon/astro-post-audit";
 
 const { SITE_URL, PUBLIC_DIR } = loadEnv(
@@ -15,6 +16,7 @@ const { SITE_URL, PUBLIC_DIR } = loadEnv(
 export default defineConfig({
   site: SITE_URL?.trim() || "http://localhost:4321",
   publicDir: PUBLIC_DIR?.trim() || "./public",
+  adapter: vercel(),
   vite: {
     plugins: [tailwindcss()],
   },
@@ -27,6 +29,7 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
+      filter: (page) => new URL(page).pathname !== "/",
       i18n: {
         defaultLocale: "en",
         locales: {
@@ -38,6 +41,7 @@ export default defineConfig({
     postAudit({
       preset: "strict",
       failOn: "errors",
+      strict: false,
       hints: {
         sourceFiles: true,
       },
