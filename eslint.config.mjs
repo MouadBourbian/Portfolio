@@ -5,10 +5,11 @@ import tseslint from "typescript-eslint";
 import astro from "eslint-plugin-astro";
 
 export default defineConfig(
-  globalIgnores(["**/.*", "**/*.d.ts"]),
+  globalIgnores(["**/.*", "**/*.d.ts", "dist/"]),
   {
     files: ["**/*.{js,ts}"],
     extends: [js.configs.recommended, tseslint.configs.recommended],
   },
   ...astro.configs.recommended,
+  ...astro.configs["jsx-a11y-strict"],
 );
