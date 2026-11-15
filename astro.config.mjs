@@ -1,9 +1,18 @@
 // @ts-check
 import { defineConfig } from "astro/config";
+import { loadEnv } from "vite";
 import tailwindcss from "@tailwindcss/vite";
+import sitemap from "@astrojs/sitemap";
+
+const { SITE_URL } = loadEnv(
+  process.env.NODE_ENV ?? "development",
+  process.cwd(),
+  "",
+);
 
 // https://astro.build/config
 export default defineConfig({
+  site: SITE_URL || "http://localhost:4321",
   vite: {
     plugins: [tailwindcss()],
   },
@@ -14,4 +23,15 @@ export default defineConfig({
       prefixDefaultLocale: true,
     },
   },
+  integrations: [
+    sitemap({
+      i18n: {
+        defaultLocale: "en",
+        locales: {
+          en: "en",
+          de: "de",
+        },
+      },
+    }),
+  ],
 });

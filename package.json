@@ -16,6 +16,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.7.5",
     "@tailwindcss/vite": "^4.3.5",
     "astro": "^7.4.11",
     "daisyui": "^5.7.50",
