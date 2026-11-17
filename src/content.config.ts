@@ -2,7 +2,7 @@ import { defineCollection } from "astro:content";
 import { glob, file } from "astro/loaders";
 import { z } from "astro/zod";
 
-const contentDir = import.meta.env.CONTENT_DIR?.trim() || "./src/content";
+const contentDir = process.env.CONTENT_DIR;
 
 const about = defineCollection({
   loader: glob({

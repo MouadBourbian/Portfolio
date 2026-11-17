@@ -1,5 +1,6 @@
 @import "tailwindcss";
-@config "../../tailwind.config.mjs";
+@source "@public";
+@source "@content";
 @plugin "@tailwindcss/typography";
 @plugin "daisyui" {
   themes: corporate --default;

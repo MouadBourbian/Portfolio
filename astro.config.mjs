@@ -6,19 +6,29 @@ import sitemap from "@astrojs/sitemap";
 import vercel from "@astrojs/vercel";
 import postAudit from "@casoon/astro-post-audit";
 
-const { SITE_URL, PUBLIC_DIR } = loadEnv(
-  process.env.NODE_ENV ?? "development",
-  process.cwd(),
-  "",
-);
+const env = loadEnv(process.env.NODE_ENV ?? "development", process.cwd(), "");
+
+process.env.SITE_URL = env.SITE_URL?.trim() || "http://localhost:4321";
+process.env.CONTENT_DIR = env.CONTENT_DIR?.trim() || "./src/content";
+process.env.PUBLIC_DIR = env.PUBLIC_DIR?.trim() || "./public";
 
 // https://astro.build/config
 export default defineConfig({
-  site: SITE_URL?.trim() || "http://localhost:4321",
-  publicDir: PUBLIC_DIR?.trim() || "./public",
+  site: process.env.SITE_URL,
+  publicDir: process.env.PUBLIC_DIR,
   adapter: vercel(),
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [
+      {
+        name: "tw-aliases",
+        enforce: "pre",
+        transform: (code) =>
+          code
+            .replace("@content", process.env.CONTENT_DIR ?? "")
+            .replace("@public", process.env.PUBLIC_DIR ?? ""),
+      },
+      tailwindcss(),
+    ],
   },
   i18n: {
     defaultLocale: "en",
