@@ -1,4 +1,5 @@
 // @ts-check
+import path from "path";
 import { defineConfig } from "astro/config";
 import { loadEnv } from "vite";
 import tailwindcss from "@tailwindcss/vite";
@@ -24,8 +25,8 @@ export default defineConfig({
         enforce: "pre",
         transform: (code) =>
           code
-            .replace("@content", process.env.CONTENT_DIR ?? "")
-            .replace("@public", process.env.PUBLIC_DIR ?? ""),
+            .replace("@content", path.resolve(process.env.CONTENT_DIR ?? ""))
+            .replace("@public", path.resolve(process.env.PUBLIC_DIR ?? "")),
       },
       tailwindcss(),
     ],
