@@ -10,43 +10,39 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "astro check && eslint .",
-    "test:a11y": "playwright test",
+    "check": "astro check",
+    "test:e2e": "playwright test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.12",
-    "@astrojs/sitemap": "^3.7.5",
-    "@astrojs/vercel": "^11.0.22",
-    "@tailwindcss/vite": "^4.3.5",
-    "accessible-astro-components": "^5.8.1",
-    "astro": "^7.4.11",
-    "astro-seo": "^1.2.0",
-    "daisyui": "^5.7.50",
-    "tailwindcss": "^4.3.5"
+    "@astrojs/vercel": "^8.0.4",
+    "astro": "^7.4.11"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@astrojs/sitemap": "^3.7.5",
     "@axe-core/playwright": "^4.14.0",
-    "@casoon/astro-post-audit": "^0.10.0",
     "@eslint/js": "^10.0.1",
-    "@iconify/json": "^2.2.556",
+    "@iconify-json/devicon": "^1.2.71",
+    "@iconify-json/lucide": "^1.2.155",
+    "@iconify-json/simple-icons": "^1.2.101",
     "@iconify/tailwind4": "^1.2.3",
     "@playwright/test": "^1.65.1",
-    "@tailwindcss/typography": "^0.5.20",
-    "@typescript-eslint/parser": "^8.72.2",
+    "@tailwindcss/typography": "^0.5.4",
+    "@tailwindcss/vite": "^4.3.5",
+    "daisyui": "^5.7.50",
     "eslint": "^10.14.0",
-    "eslint-plugin-astro": "^3.2.1",
-    "eslint-plugin-jsx-a11y-x": "^0.2.0",
+    "eslint-plugin-astro": "^3.1.0",
+    "eslint-plugin-jsx-a11y-x": "^0.1.1",
     "prettier": "^3.10.0",
     "prettier-plugin-astro": "1.1.2",
     "prettier-plugin-tailwindcss": "^0.8.1",
+    "tailwindcss": "^4.3.5",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.72.2"
-  },
-  "allowScripts": {
-    "@casoon/astro-post-audit@0.10.0": true
+    "typescript-eslint": "^8.72.2",
+    "vite": "^6.2.7"
   }
 }
