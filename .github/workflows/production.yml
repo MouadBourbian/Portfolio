@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: production
+  group: portfolio-production
   cancel-in-progress: false
 
 jobs:
@@ -19,13 +19,12 @@ jobs:
     name: Build and deploy to Vercel
     needs: checks
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     environment: production
     defaults:
       run:
+        shell: bash
         working-directory: app
-    env:
-      VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -33,45 +32,22 @@ jobs:
           path: app
           persist-credentials: false
 
-      - name: Clone private production content
-        id: content
+      - name: Clone production content
         env:
           CONTENT_REPO_URL: ${{ vars.CONTENT_REPO_URL }}
           GH_TOKEN: ${{ secrets.CONTENT_REPO_TOKEN }}
-          CONTENT_DIR: ${{ vars.CONTENT_DIR || 'content' }}
-          PUBLIC_DIR: ${{ vars.PUBLIC_DIR || 'public' }}
-          SITE_URL: ${{ vars.SITE_URL }}
+          GIT_TERMINAL_PROMPT: "0"
         run: |
           if [[ ! "$CONTENT_REPO_URL" =~ ^https://github\.com/[A-Za-z0-9-]+/[A-Za-z0-9._-]+/?$ ]]; then
-            echo '::error::Set CONTENT_REPO_URL to https://github.com/OWNER/REPO.'
+            echo '::error::CONTENT_REPO_URL must be a GitHub HTTPS repository URL.'
             exit 1
           fi
-
-          if [[ "$SITE_URL" != https://?* ]]; then
-            echo '::error::SITE_URL must be an HTTPS URL.'
+          if [[ -z "$GH_TOKEN" ]]; then
+            echo '::error::CONTENT_REPO_TOKEN is missing.'
             exit 1
           fi
-
-          for setting in VERCEL_ORG_ID VERCEL_PROJECT_ID; do
-            if [[ -z "${!setting}" ]]; then
-              printf '::error::%s is missing.\n' "$setting"
-              exit 1
-            fi
-          done
-
-          for setting in CONTENT_DIR PUBLIC_DIR; do
-            directory="${!setting}"
-            case "/$directory/" in
-              *//* | */./* | */../* | *$'\r'* | *$'\n'* | *[\*\?\[\\]* | *[[:space:]]/)
-                printf '::error::%s must be relative to the repository root.\n' "$setting"
-                exit 1
-                ;;
-            esac
-          done
-
-          gh auth setup-git --hostname github.com
-          gh repo clone "$CONTENT_REPO_URL" ../production-content -- --depth=1
-          printf 'content_dir=%s\npublic_dir=%s\n' "$CONTENT_DIR" "$PUBLIC_DIR" >> "$GITHUB_OUTPUT"
+          git -c credential.helper= -c 'credential.https://github.com.helper=!gh auth git-credential' \
+            clone --depth=1 -- "$CONTENT_REPO_URL" ../production-content
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -79,32 +55,59 @@ jobs:
           cache: npm
           cache-dependency-path: app/package-lock.json
 
-      - name: Install Vercel CLI
-        run: npm install --global vercel@65.16.0
-
-      - name: Pull Vercel production settings
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+      - name: Install dependencies
+        run: npm ci --include=dev
 
       - name: Build with production content
         env:
-          CONTENT_DIR: ../production-content/${{ steps.content.outputs.content_dir }}
-          PUBLIC_DIR: ../production-content/${{ steps.content.outputs.public_dir }}
+          CONTENT_DIR: ${{ vars.CONTENT_DIR || 'content' }}
+          PUBLIC_DIR: ${{ vars.PUBLIC_DIR || 'public' }}
           SITE_URL: ${{ vars.SITE_URL }}
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
+          node --input-type=module -e '
+            const site = URL.parse(process.env.SITE_URL);
+            if (site?.protocol !== "https:" || site.username || site.password) {
+              console.error("::error::SITE_URL must be an HTTPS URL.");
+              process.exit(1);
+            }
+          '
+
           for setting in CONTENT_DIR PUBLIC_DIR; do
             directory="${!setting}"
-            if [[ ! -d "$directory" ]]; then
-              printf '::error::%s directory "%s" does not exist.\n' \
-                "$setting" "${directory#../production-content/}"
+            case "/$directory/" in
+              *//* | */./* | */../* | *$'\r'* | *$'\n'* | *[\*\?\[\\]* | *[[:space:]]/)
+                printf '::error::%s must be relative to the content repository.\n' "$setting"
+                exit 1
+                ;;
+            esac
+            if [[ ! -d "../production-content/$directory" ]]; then
+              printf '::error::%s directory does not exist.\n' "$setting"
               exit 1
             fi
           done
-          vercel build --prod --token="$VERCEL_TOKEN"
 
-      - name: Deploy prebuilt site to Vercel production
+          CONTENT_DIR="../production-content/$CONTENT_DIR" \
+          PUBLIC_DIR="../production-content/$PUBLIC_DIR" \
+            npm run build
+
+          if [[ ! -s .vercel/output/config.json ]]; then
+            echo '::error::.vercel/output/config.json is missing or empty.'
+            exit 1
+          fi
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@65.16.0
+
+      - name: Deploy prebuilt output
         env:
+          VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+        run: |
+          for setting in VERCEL_ORG_ID VERCEL_PROJECT_ID VERCEL_TOKEN; do
+            if [[ -z "${!setting}" ]]; then
+              printf '::error::%s is missing.\n' "$setting"
+              exit 1
+            fi
+          done
+          vercel deploy --prebuilt --prod --yes --token="$VERCEL_TOKEN"
