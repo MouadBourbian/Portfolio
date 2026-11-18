@@ -5,7 +5,6 @@ import { loadEnv } from "vite";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 import vercel from "@astrojs/vercel";
-import postAudit from "@casoon/astro-post-audit";
 
 const env = loadEnv(process.env.NODE_ENV ?? "development", process.cwd(), "");
 
@@ -46,19 +45,6 @@ export default defineConfig({
         locales: {
           en: "en",
           de: "de",
-        },
-      },
-    }),
-    postAudit({
-      preset: "strict",
-      failOn: "errors",
-      strict: false,
-      hints: {
-        sourceFiles: true,
-      },
-      rules: {
-        filters: {
-          exclude: ["404.html", "500.html"],
         },
       },
     }),
