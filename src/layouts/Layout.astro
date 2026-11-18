@@ -1,7 +1,5 @@
 ---
 import { getEntry } from "astro:content";
-import { SEO } from "astro-seo";
-import { SkipLink } from "accessible-astro-components";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 import { getLangFromUrl, useTranslations } from "../i18n/utils";
@@ -28,7 +26,7 @@ if (!localizedProfile || !("bio" in localizedProfile.data)) {
 }
 
 const { name, portrait } = baseProfile.data;
-const pageTitle = title || t("nav.home");
+const pageTitle = `${title || t("nav.home")} | ${name}`;
 const pageDescription = description || localizedProfile.data.bio;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
 const ogImageURL = new URL(portrait, Astro.site).toString();
@@ -43,31 +41,25 @@ const ogImageURL = new URL(portrait, Astro.site).toString();
     <link rel="icon" href="/favicon.ico" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="generator" content={Astro.generator} />
-    <SEO
-      title={pageTitle}
-      titleTemplate={`%s | ${name}`}
-      titleDefault={`${t("nav.home")} | ${name}`}
-      description={pageDescription}
-      canonical={canonicalURL}
-      noindex={noindex}
-      nofollow={noindex}
-      openGraph={{
-        basic: {
-          title: `${pageTitle} | ${name}`,
-          type: "website",
-          image: ogImageURL,
-          url: canonicalURL,
-        },
-        optional: {
-          description: pageDescription,
-          locale: lang,
-          siteName: name,
-        },
-      }}
-    />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonicalURL} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:locale" content={lang} />
+    <meta property="og:site_name" content={name} />
   </head>
   <body class="flex min-h-dvh flex-col">
-    <SkipLink text={t("nav.skipToContent")} target="#main-content" />
+    <a
+      href="#main-content"
+      class="bg-base-100 text-base-content fixed top-2 left-2 z-60 px-4 py-2 not-focus:sr-only"
+    >
+      {t("nav.skipToContent")}
+    </a>
     <Navbar />
     <main id="main-content" tabindex="-1" class="flex-1 focus:outline-none">
       <slot />
